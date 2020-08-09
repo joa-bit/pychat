@@ -1,5 +1,7 @@
-
 import socket
+from threading import Thread
+
+
 
 HOST = '127.0.0.1'
 PORT = 1234
@@ -11,12 +13,17 @@ s.listen(1)
 conn, addr = s.accept()
 print ('Conectado por', addr)
 
+def loop_b():
+	while True:
+		data = conn.recv(1024)
+		data = data.decode("utf-8")
+		print (repr(data))
 
+Thread(target=loop_b).start()
 while True:
-	data = conn.recv(1024)
-	print ("Recibido: ", repr(data))
-	respuesta = input("Respuesta: ")
-	respuesta = str.encode(respuesta)
-	conn.sendall(respuesta)
+    respuesta = str.encode(input(""))
+    conn.sendall(respuesta)
+
+
 
 conn.close()
